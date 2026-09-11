@@ -1,8 +1,6 @@
 # Laundry Out
 
-Projeto acadêmico desenvolvido em Django. O PostgreSQL é o banco principal para
-desenvolvimento e apresentação; o SQLite está disponível como alternativa para
-testes rápidos em máquinas que não tenham PostgreSQL.
+Projeto de Lavanderia desenvolvido em Django.
 
 ## Preparar o ambiente
 
