@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods, require_POST
@@ -6,6 +7,7 @@ from .forms import TipoUniformeAtualizacaoForm, TipoUniformeForm
 from .models import TipoUniforme
 
 
+@login_required
 @require_http_methods(['GET', 'POST'])
 def lista_uniformes(request):
     form = TipoUniformeForm(request.POST or None, request.FILES or None)
@@ -22,6 +24,7 @@ def lista_uniformes(request):
     })
 
 
+@login_required
 @require_POST
 def atualizar_uniforme(request, pk):
     uniforme = get_object_or_404(TipoUniforme, pk=pk)
@@ -59,6 +62,7 @@ def atualizar_uniforme(request, pk):
     })
 
 
+@login_required
 @require_POST
 def excluir_uniforme(request, pk):
     uniforme = get_object_or_404(TipoUniforme, pk=pk)

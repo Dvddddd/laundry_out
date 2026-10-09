@@ -15,7 +15,15 @@
             <nav class="d-flex gap-3" aria-label="Cadastros">
                 <a class="app-nav-link" href="{% url 'maquinas:lista' %}">Máquinas</a>
                 <a class="app-nav-link active" href="{% url 'uniformes:lista' %}">Uniformes</a>
+                <a class="app-nav-link" href="{% url 'contas:cadastro' %}">Cadastro</a>
             </nav>
+            <div class="app-session">
+                <span>{{ request.user.username }}</span>
+                <form method="post" action="{% url 'contas:logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Sair</button>
+                </form>
+            </div>
         </div>
     </header>
 

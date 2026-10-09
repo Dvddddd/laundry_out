@@ -2,6 +2,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
+from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -23,6 +24,13 @@ def imagem_teste(nome='uniforme.gif'):
 
 @override_settings(MEDIA_ROOT=MEDIA_TESTE)
 class TipoUniformeTests(TestCase):
+    def setUp(self):
+        self.usuario = User.objects.create_user(
+            username='operador',
+            password='SenhaMuitoForte#2026',
+        )
+        self.client.force_login(self.usuario)
+
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()

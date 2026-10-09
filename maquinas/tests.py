@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
@@ -7,7 +8,14 @@ from .models import Maquina
 
 
 class MaquinaTests(TestCase):
-    def test_pagina_e_publica_e_nao_exibe_coluna_id(self):
+    def setUp(self):
+        self.usuario = User.objects.create_user(
+            username='operador',
+            password='SenhaMuitoForte#2026',
+        )
+        self.client.force_login(self.usuario)
+
+    def test_pagina_autenticada_nao_exibe_coluna_id(self):
         Maquina.objects.create(codigo='ML-001', nome='Máquina Principal')
 
         response = self.client.get(reverse('maquinas:lista'))

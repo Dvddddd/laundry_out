@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods, require_POST
@@ -8,6 +9,7 @@ from .forms import MaquinaForm
 from .models import Maquina
 
 
+@login_required
 @require_http_methods(['GET', 'POST'])
 def lista_maquinas(request):
     form = MaquinaForm(request.POST or None)
@@ -23,6 +25,7 @@ def lista_maquinas(request):
     })
 
 
+@login_required
 @require_POST
 def atualizar_maquina(request, pk):
     maquina = get_object_or_404(Maquina, pk=pk)
@@ -48,6 +51,7 @@ def atualizar_maquina(request, pk):
     })
 
 
+@login_required
 @require_POST
 def excluir_maquina(request, pk):
     maquina = get_object_or_404(Maquina, pk=pk)

@@ -26,6 +26,22 @@ body {
     transform: translateX(-50%);
 }
 
+.app-session {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    margin-left: auto;
+}
+
+.app-session span {
+    color: #5a6476;
+    font-size: 0.875rem;
+}
+
+.app-session form {
+    margin: 0;
+}
+
 .app-brand {
     font-size: 1.45rem;
     font-weight: 700;
@@ -65,6 +81,10 @@ body {
         left: auto;
         position: static;
         transform: none;
+    }
+
+    .app-session {
+        margin-left: 0;
     }
 
     main.container-fluid {
