@@ -1,0 +1,196 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Uniformes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'uniformes/css/uniformes.css' %}">
+</head>
+<body>
+    <header class="app-header border-bottom">
+        <div class="app-header-content container-fluid px-4 px-lg-5 py-3">
+            <span class="app-brand">Lavanderia</span>
+            <nav class="d-flex gap-3" aria-label="Cadastros">
+                <a class="app-nav-link" href="{% url 'maquinas:lista' %}">Máquinas</a>
+                <a class="app-nav-link active" href="{% url 'uniformes:lista' %}">Uniformes</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container-fluid px-4 px-lg-5 py-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <h1 class="h2 fw-bold mb-0">Tipos de Uniforme</h1>
+            <button
+                class="btn btn-primary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#formulario-uniforme"
+                aria-expanded="{% if abrir_formulario %}true{% else %}false{% endif %}"
+                aria-controls="formulario-uniforme"
+            >
+                Novo Uniforme
+            </button>
+        </div>
+
+        <section
+            id="formulario-uniforme"
+            class="collapse{% if abrir_formulario %} show{% endif %} mb-4"
+            aria-label="Cadastro de uniforme"
+        >
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-bold mb-3">Cadastrar Novo Uniforme</h2>
+
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="{{ form.nome.id_for_label }}">{{ form.nome.label }}</label>
+                                {{ form.nome }}
+                                {% for error in form.nome.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label" for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+                                {{ form.status }}
+                                {% for error in form.status.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label" for="{{ form.imagem.id_for_label }}">{{ form.imagem.label }}</label>
+                                {{ form.imagem }}
+                                <div class="form-text">Selecione uma imagem do uniforme.</div>
+                                {% for error in form.imagem.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button class="btn btn-primary" type="submit">Salvar</button>
+                            <button
+                                class="btn btn-outline-secondary"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#formulario-uniforme"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="card shadow-sm" aria-labelledby="titulo-lista-uniformes">
+            <div class="card-body p-4">
+                <h2 id="titulo-lista-uniformes" class="h5 fw-bold mb-3">Uniformes Cadastrados</h2>
+
+                <div id="mensagem-uniformes" class="alert d-none" role="alert"></div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Ordem</th>
+                                <th scope="col">Imagem</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" class="coluna-acoes">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-uniformes">
+                            {% for uniforme in uniformes %}
+                                <tr
+                                    data-uniforme-id="{{ uniforme.pk }}"
+                                    data-url-atualizar="{% url 'uniformes:atualizar' uniforme.pk %}"
+                                    data-url-excluir="{% url 'uniformes:excluir' uniforme.pk %}"
+                                    data-imagem-url="{% if uniforme.imagem %}{{ uniforme.imagem.url }}{% endif %}"
+                                >
+                                    <td>
+                                        <span data-display="ordem">{{ uniforme.ordem }}</span>
+                                        <input
+                                            class="form-control form-control-sm d-none campo-ordem"
+                                            data-input="ordem"
+                                            type="number"
+                                            min="0"
+                                            value="{{ uniforme.ordem }}"
+                                        >
+                                    </td>
+                                    <td>
+                                        <div class="imagem-uniforme" data-display="imagem">
+                                            {% if uniforme.imagem %}
+                                                <img src="{{ uniforme.imagem.url }}" alt="{{ uniforme.nome }}">
+                                            {% else %}
+                                                <span class="sem-imagem">Sem imagem</span>
+                                            {% endif %}
+                                        </div>
+                                        <input
+                                            class="form-control form-control-sm d-none campo-imagem"
+                                            data-input="imagem"
+                                            type="file"
+                                            accept="image/*"
+                                        >
+                                    </td>
+                                    <td>
+                                        <span data-display="nome">{{ uniforme.nome }}</span>
+                                        <input
+                                            class="form-control form-control-sm d-none"
+                                            data-input="nome"
+                                            maxlength="100"
+                                            value="{{ uniforme.nome }}"
+                                        >
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge {% if uniforme.status == 'ativo' %}text-bg-success{% else %}text-bg-secondary{% endif %}"
+                                            data-display="status"
+                                        >
+                                            {{ uniforme.get_status_display }}
+                                        </span>
+                                        <select class="form-select form-select-sm d-none" data-input="status">
+                                            {% for valor, rotulo in status_escolhas %}
+                                                <option value="{{ valor }}"{% if uniforme.status == valor %} selected{% endif %}>{{ rotulo }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <button class="btn btn-sm btn-outline-primary" type="button" data-acao="editar">Editar</button>
+                                            <button class="btn btn-sm btn-success d-none" type="button" data-acao="salvar">Salvar</button>
+                                            <button class="btn btn-sm btn-outline-secondary d-none" type="button" data-acao="cancelar">Cancelar</button>
+                                            <button class="btn btn-sm btn-outline-danger" type="button" data-acao="excluir">Excluir</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr data-estado-vazio>
+                                    <td colspan="5" class="text-center text-secondary py-4">
+                                        Nenhum uniforme cadastrado.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'uniformes/js/uniformes.js' %}"></script>
+</body>
+</html>

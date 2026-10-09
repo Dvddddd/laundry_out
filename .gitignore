@@ -4,4 +4,6 @@ db.sqlite3
 __pycache__/
 *.py[cod]
 staticfiles/
+/media/*
+!/media/.gitkeep
 /ref_01.png

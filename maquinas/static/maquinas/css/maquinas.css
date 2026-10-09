@@ -13,9 +13,33 @@ body {
     box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
 }
 
+.app-header-content {
+    align-items: center;
+    display: flex;
+    min-height: 58px;
+    position: relative;
+}
+
+.app-header-content nav {
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+}
+
 .app-brand {
     font-size: 1.45rem;
     font-weight: 700;
+}
+
+.app-nav-link {
+    color: #5a6476;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.app-nav-link:hover,
+.app-nav-link.active {
+    color: #0d6efd;
 }
 
 .card {
@@ -32,6 +56,17 @@ body {
 }
 
 @media (max-width: 575.98px) {
+    .app-header-content {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .app-header-content nav {
+        left: auto;
+        position: static;
+        transform: none;
+    }
+
     main.container-fluid {
         padding-right: 1rem !important;
         padding-left: 1rem !important;

@@ -1,0 +1,104 @@
+:root {
+    color-scheme: light;
+}
+
+body {
+    min-height: 100vh;
+    background: #f5f6f8;
+    color: #172033;
+}
+
+.app-header {
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
+}
+
+.app-header-content {
+    align-items: center;
+    display: flex;
+    min-height: 58px;
+    position: relative;
+}
+
+.app-header-content nav {
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+.app-brand {
+    font-size: 1.45rem;
+    font-weight: 700;
+}
+
+.app-nav-link {
+    color: #5a6476;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.app-nav-link:hover,
+.app-nav-link.active {
+    color: #0d6efd;
+}
+
+.card {
+    border-color: #dee2e6;
+}
+
+.coluna-acoes {
+    min-width: 250px;
+    width: 250px;
+}
+
+.campo-ordem {
+    width: 90px;
+}
+
+.campo-imagem {
+    min-width: 210px;
+}
+
+[data-input="nome"] {
+    min-width: 180px;
+}
+
+.imagem-uniforme {
+    align-items: center;
+    display: flex;
+    min-height: 64px;
+}
+
+.imagem-uniforme img {
+    border-radius: 0.375rem;
+    height: 64px;
+    object-fit: cover;
+    width: 64px;
+}
+
+.sem-imagem {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 575.98px) {
+    .app-header-content {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .app-header-content nav {
+        left: auto;
+        position: static;
+        transform: none;
+    }
+
+    main.container-fluid {
+        padding-right: 1rem !important;
+        padding-left: 1rem !important;
+    }
+
+    .card-body {
+        padding: 1rem !important;
+    }
+}
