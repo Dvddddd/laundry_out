@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'contas',
     'maquinas',
     'uniformes',
+    'pesagens',
 ]
 
 MIDDLEWARE = [
@@ -148,5 +149,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'contas:login'
-LOGIN_REDIRECT_URL = 'maquinas:lista'
+LOGIN_REDIRECT_URL = 'pesagens:lista'
 LOGOUT_REDIRECT_URL = 'contas:login'

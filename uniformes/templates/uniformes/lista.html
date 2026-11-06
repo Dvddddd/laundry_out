@@ -13,6 +13,7 @@
         <div class="app-header-content container-fluid px-4 px-lg-5 py-3">
             <span class="app-brand">Lavanderia</span>
             <nav class="d-flex gap-3" aria-label="Cadastros">
+                <a class="app-nav-link" href="{% url 'pesagens:lista' %}">Pesagens</a>
                 <a class="app-nav-link" href="{% url 'maquinas:lista' %}">Máquinas</a>
                 <a class="app-nav-link active" href="{% url 'uniformes:lista' %}">Uniformes</a>
                 <a class="app-nav-link" href="{% url 'contas:cadastro' %}">Cadastro</a>

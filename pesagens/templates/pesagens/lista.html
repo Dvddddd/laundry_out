@@ -1,0 +1,107 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pesagens</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'maquinas/css/maquinas.css' %}">
+    <link rel="stylesheet" href="{% static 'pesagens/css/pesagens.css' %}">
+</head>
+<body>
+    <header class="app-header border-bottom">
+        <div class="app-header-content container-fluid px-4 px-lg-5 py-3">
+            <span class="app-brand">Lavanderia</span>
+            <nav class="d-flex gap-3" aria-label="Cadastros">
+                <a class="app-nav-link active" aria-current="page" href="{% url 'pesagens:lista' %}">Pesagens</a>
+                <a class="app-nav-link" href="{% url 'maquinas:lista' %}">Máquinas</a>
+                <a class="app-nav-link" href="{% url 'uniformes:lista' %}">Uniformes</a>
+                <a class="app-nav-link" href="{% url 'contas:cadastro' %}">Cadastro</a>
+            </nav>
+            <div class="app-session">
+                <span>{{ request.user.username }}</span>
+                <form method="post" action="{% url 'contas:logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main class="container-fluid px-4 px-lg-5 py-4">
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+            <h1 class="h2 fw-bold mb-0">Pesagens</h1>
+            {% if not editando %}
+                <button
+                    class="btn btn-primary ms-auto"
+                    type="button"
+                    aria-controls="formulario-nova-pesagem"
+                    aria-expanded="{{ form.is_bound|yesno:'true,false' }}"
+                    data-toggle-pesagem
+                >
+                    <span aria-hidden="true">+</span> Nova Pesagem
+                </button>
+            {% endif %}
+        </div>
+        {% if not editando %}
+            <section id="formulario-nova-pesagem" class="card shadow-sm mb-4" {% if not form.is_bound %}hidden{% endif %}>
+                <div class="card-body p-4">
+                    {% url 'pesagens:lista' as acao %}
+                    {% include "pesagens/formulario.html" %}
+                </div>
+            </section>
+        {% endif %}
+
+        <section class="card shadow-sm" aria-labelledby="titulo-pesagens">
+            <div class="card-body p-4">
+                <h2 id="titulo-pesagens" class="h5 fw-bold mb-3">Pesagens cadastradas</h2>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Máquina</th>
+                                <th scope="col">Uniforme</th>
+                                <th scope="col">Peso (kg)</th>
+                                <th scope="col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pesagem in pesagens %}
+                                <tr>
+                                    <td>{{ pesagem.maquina|default_if_none:"Máquina removida" }}</td>
+                                    <td>{{ pesagem.uniforme|default_if_none:"Uniforme removido" }}</td>
+                                    <td>{{ pesagem.peso }}</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <a class="btn btn-sm btn-outline-primary" href="{% url 'pesagens:editar' pesagem.pk %}#editar-pesagem">Editar</a>
+                                            <form method="post" action="{% url 'pesagens:excluir' pesagem.pk %}" data-excluir-pesagem>
+                                                {% csrf_token %}
+                                                <button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% if editando == pesagem.pk %}
+                                    <tr id="editar-pesagem">
+                                        <td colspan="4" class="p-3">
+                                            <h3 class="h5 mb-3">Editar pesagem</h3>
+                                            {% url 'pesagens:editar' pesagem.pk as acao %}
+                                            {% include "pesagens/formulario.html" %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-secondary py-4">Nenhuma pesagem cadastrada.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="{% static 'pesagens/js/pesagens.js' %}" defer></script>
+</body>
+</html>

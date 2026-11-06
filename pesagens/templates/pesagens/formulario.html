@@ -1,0 +1,38 @@
+<form method="post" action="{{ acao }}" data-form-pesagem>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="row g-4">
+        <div class="col-12 col-lg-7">
+            <fieldset class="mb-3">
+                <legend class="h6 fw-bold">{{ form.maquina.label }}</legend>
+                {{ form.maquina }}
+                {% if not form.maquina.field.queryset.exists %}
+                    <p class="text-secondary">Cadastre uma máquina na aba Máquinas.</p>
+                {% endif %}
+                {{ form.maquina.errors }}
+            </fieldset>
+            <fieldset>
+                <legend class="h6 fw-bold">{{ form.uniforme.label }}</legend>
+                {{ form.uniforme }}
+                {% if not form.uniforme.field.queryset.exists %}
+                    <p class="text-secondary">Cadastre um uniforme na aba Uniformes.</p>
+                {% endif %}
+                {{ form.uniforme.errors }}
+            </fieldset>
+        </div>
+        <div class="col-12 col-lg-5">
+            <h3 class="h5 fw-bold mb-3">Pesagem e ações</h3>
+            <span class="form-label fw-bold">Peso</span>
+            <output class="pesagem-display mb-3" for="{{ form.peso.id_for_label }}" data-display-peso>—</output>
+            <label class="form-label fw-bold" for="{{ form.peso.id_for_label }}">Informar peso manualmente (kg)</label>
+            {{ form.peso }}
+            {{ form.peso.errors }}
+            <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-success" type="submit">Salvar pesagem</button>
+                {% if editando %}
+                    <a class="btn btn-outline-secondary" href="{% url 'pesagens:lista' %}">Cancelar</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</form>

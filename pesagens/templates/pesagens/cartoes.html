@@ -1,0 +1,7 @@
+<div{% include "django/forms/widgets/attrs.html" %}>
+    {% for grupo, opcoes, indice in widget.optgroups %}
+        {% for opcao in opcoes %}
+            {% include opcao.template_name with widget=opcao %}
+        {% endfor %}
+    {% endfor %}
+</div>

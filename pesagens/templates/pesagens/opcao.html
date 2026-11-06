@@ -1,0 +1,9 @@
+<label class="pesagem-opcao">
+    {% include "django/forms/widgets/input.html" %}
+    <span class="pesagem-cartao">
+        {% if widget.imagem_url %}
+            <img src="{{ widget.imagem_url }}" alt="">
+        {% endif %}
+        {{ widget.label }}
+    </span>
+</label>

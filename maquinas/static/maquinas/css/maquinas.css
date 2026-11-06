@@ -71,7 +71,7 @@ body {
     min-width: 160px;
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 767.98px) {
     .app-header-content {
         flex-direction: column;
         gap: 0.5rem;

@@ -18,7 +18,7 @@ class AutenticacaoTests(TestCase):
             'password': self.senha,
         })
 
-        self.assertRedirects(response, reverse('maquinas:lista'))
+        self.assertRedirects(response, reverse('pesagens:lista'))
         self.assertEqual(
             self.client.session['_auth_user_id'],
             str(self.usuario.pk),
@@ -50,6 +50,7 @@ class AutenticacaoTests(TestCase):
 
     def test_paginas_exigem_login(self):
         for url in (
+            reverse('pesagens:lista'),
             reverse('maquinas:lista'),
             reverse('uniformes:lista'),
             reverse('contas:cadastro'),
@@ -67,6 +68,7 @@ class AutenticacaoTests(TestCase):
         self.client.force_login(self.usuario)
 
         for url in (
+            reverse('pesagens:lista'),
             reverse('maquinas:lista'),
             reverse('uniformes:lista'),
             reverse('contas:cadastro'),
