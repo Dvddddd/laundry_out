@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'maquinas',
     'uniformes',
     'pesagens',
+    'paradas',
 ]
 
 MIDDLEWARE = [

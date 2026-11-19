@@ -1,0 +1,78 @@
+{% load static tz %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Paradas de máquinas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'maquinas/css/maquinas.css' %}">
+</head>
+<body>
+    <header class="app-header border-bottom">
+        <div class="app-header-content container-fluid px-4 px-lg-5 py-3">
+            <span class="app-brand">Lavanderia</span>
+            <nav class="d-flex gap-3" aria-label="Cadastros">
+                <a class="app-nav-link" href="{% url 'pesagens:lista' %}">Pesagens</a>
+                <a class="app-nav-link active" aria-current="page" href="{% url 'paradas:lista' %}">Parada</a>
+                <a class="app-nav-link" href="{% url 'maquinas:lista' %}">Máquinas</a>
+                <a class="app-nav-link" href="{% url 'uniformes:lista' %}">Uniformes</a>
+                <a class="app-nav-link" href="{% url 'contas:cadastro' %}">Cadastro</a>
+            </nav>
+            <div class="app-session">
+                <span>{{ request.user.username }}</span>
+                <form method="post" action="{% url 'contas:logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </header>
+    <main class="container-fluid px-4 px-lg-5 py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 fw-bold m-0">Paradas de máquinas</h1>
+            <button class="btn btn-primary" type="button" data-toggle-parada aria-expanded="{{ form.errors|yesno:'true,false' }}">Nova Parada</button>
+        </div>
+        <section class="card shadow-sm mb-4" data-form-parada {% if not form.errors %}hidden{% endif %}>
+            <div class="card-body p-4">
+                <h2 class="h5 fw-bold mb-3">Registrar parada</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6"><label class="form-label" for="{{ form.maquina.id_for_label }}">{{ form.maquina.label }}</label>{{ form.maquina }}{{ form.maquina.errors }}</div>
+                        <div class="col-12 col-md-6"><label class="form-label" for="{{ form.pessoa_acionada.id_for_label }}">{{ form.pessoa_acionada.label }}</label>{{ form.pessoa_acionada }}{{ form.pessoa_acionada.errors }}</div>
+                        <div class="col-12"><label class="form-label" for="{{ form.motivo.id_for_label }}">{{ form.motivo.label }}</label>{{ form.motivo }}{{ form.motivo.errors }}</div>
+                    </div>
+                    <button class="btn btn-primary mt-3">Salvar parada</button>
+                </form>
+            </div>
+        </section>
+        {% for message in messages %}<div class="alert alert-success">{{ message }}</div>{% endfor %}
+        <section class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="get" class="mb-3"><div class="input-group"><input class="form-control" name="q" value="{{ q }}" placeholder="Buscar por máquina, motivo ou pessoa"><button class="btn btn-outline-primary">Buscar</button></div></form>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light"><tr><th>Máquina</th><th>Pessoa acionada</th><th>Motivo</th><th>Data e hora da parada</th><th>Data e hora do retorno</th><th>Ações</th></tr></thead>
+                        <tbody>
+                            {% for parada in paradas %}
+                                <tr>
+                                    <td>{{ parada.maquina }}</td><td>{{ parada.pessoa_acionada }}</td><td>{{ parada.motivo }}</td>
+                                    <td>{{ parada.criado_em|localtime|date:'d/m/Y H:i' }}</td>
+                                    <td>{% if parada.retorno_em %}{{ parada.retorno_em|localtime|date:'d/m/Y H:i' }}{% else %}<span class="badge bg-warning text-dark">Em parada</span>{% endif %}</td>
+                                    <td class="text-nowrap">
+                                        {% if not parada.retorno_em %}<form method="post" action="{% url 'paradas:retorno' parada.pk %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-success">Registrar retorno</button></form>{% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}<tr><td colspan="6" class="text-center text-secondary py-4">Nenhuma parada registrada.</td></tr>{% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if paradas.has_other_pages %}<nav aria-label="Paginação"><ul class="pagination justify-content-center">{% if paradas.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ paradas.previous_page_number }}&q={{ q|urlencode }}">Anterior</a></li>{% endif %}<li class="page-item disabled"><span class="page-link">{{ paradas.number }} de {{ paradas.paginator.num_pages }}</span></li>{% if paradas.has_next %}<li class="page-item"><a class="page-link" href="?page={{ paradas.next_page_number }}&q={{ q|urlencode }}">Próxima</a></li>{% endif %}</ul></nav>{% endif %}
+            </div>
+        </section>
+    </main>
+    <script src="{% static 'paradas/js/paradas.js' %}" defer></script>
+</body>
+</html>

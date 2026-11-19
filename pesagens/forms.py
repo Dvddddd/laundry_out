@@ -1,4 +1,6 @@
 from django import forms
+from maquinas.models import Maquina
+from paradas.models import ParadaMaquina
 
 from .models import Pesagem
 
@@ -18,6 +20,12 @@ class CartoesSelecao(forms.RadioSelect):
 class PesagemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        maquinas_em_parada = ParadaMaquina.objects.filter(
+            retorno_em__isnull=True,
+        ).values('maquina_id')
+        self.fields['maquina'].queryset = Maquina.objects.exclude(
+            pk__in=maquinas_em_parada,
+        )
         for campo in ('maquina', 'uniforme'):
             self.fields[campo].empty_label = None
 
